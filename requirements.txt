@@ -1,0 +1,5 @@
+pyyaml>=6.0
+subprocess32>=3.5.4
+pathlib2>=2.3.5
+typing>=3.7.4.3
+colorama>=0.4.4

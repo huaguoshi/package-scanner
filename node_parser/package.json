@@ -1,0 +1,21 @@
+{
+    "name": "package-scanner-parser",
+    "version": "1.0.0",
+    "description": "JavaScript AST parser for package-scanner",
+    "main": "parse.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "acorn": "^8.14.1",
+        "acorn-walk": "^8.3.4"
+    },
+    "optionalDependencies": {
+        "@typescript-eslint/parser": "^5.62.0",
+        "typescript": "^5.8.3"
+    },
+    "engines": {
+        "node": ">=12.0.0"
+    },
+    "private": true
+}

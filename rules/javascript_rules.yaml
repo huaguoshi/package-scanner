@@ -1,0 +1,71 @@
+# rules/javascript_rules.yaml
+# JavaScript 恶意代码检测规则
+
+- rule_name: "eval_with_dynamic_input"
+  description: "使用动态输入执行eval函数"
+  language: "javascript"
+  match:
+    type: "eval"
+    args_not_literal: true
+  severity: "high"
+
+- rule_name: "suspicious_setTimeout"
+  description: "使用字符串作为setTimeout的回调"
+  language: "javascript"
+  match:
+    type: "setTimeout_with_string"
+  severity: "high"
+
+- rule_name: "suspicious_setInterval"
+  description: "使用字符串作为setInterval的回调"
+  language: "javascript"
+  match:
+    type: "setInterval_with_string" 
+  severity: "high"
+
+- rule_name: "dynamic_require"
+  description: "使用动态输入执行require函数"
+  language: "javascript"
+  match:
+    type: "dynamic_require"
+  severity: "medium"
+
+- rule_name: "obfuscated_code"
+  description: "高度混淆的代码"
+  language: "javascript"
+  match:
+    type: "string_concat"
+    min_occurrences: 5
+  severity: "medium"
+
+- rule_name: "leak_private_key_http"
+  description: "向外部传输私钥的HTTP请求"
+  language: "javascript"
+  match:
+    type: "CallExpression"
+    callee_pattern: "fetch|axios|request|ajax|http"
+    args_contains: "http"
+    headers_contains: "private_key|token|secret|api[_-]?key"
+  severity: "high"
+
+- rule_name: "environment_detection"
+  description: "环境检测，可能用于沙箱逃逸"
+  language: "javascript"
+  match:
+    type: "environment_detection"
+    min_occurrences: 2
+  severity: "medium"
+
+- rule_name: "base64_encoding"
+  description: "使用Base64编码，可能用于混淆数据"
+  language: "javascript"
+  match:
+    type: "CallExpression"
+    callee_pattern: "btoa|atob|Buffer.from|Buffer.toString"
+  severity: "low"
+
+- rule_name: "suspicious_install_script"
+  description: "可疑的安装脚本"
+  language: "javascript"
+  pattern: "preinstall|postinstall.*curl|wget|http"
+  severity: "high"

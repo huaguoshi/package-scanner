@@ -1,0 +1,776 @@
+=== Detection Results ===
+
+Found 193 suspicious issues:
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/request.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/request.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/request.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/lib/inflate.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/lib/url-parse.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/lib/multipart.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/lib/oauth.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/lib/oauth.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/lib/helpers.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/postman-request/lib/helpers.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/@postman/form-data/lib/form_data.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/@postman/form-data/lib/form_data.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/@postman/form-data/lib/form_data.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/@postman/tunnel-agent/index.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/@postman/tunnel-agent/index.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/qs/test/stringify.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/qs/test/stringify.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/qs/test/stringify.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/qs/test/stringify.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/qs/test/stringify.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/qs/test/stringify.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/qs/test/stringify.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/qs/test/parse.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/qs/test/parse.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/safer-buffer/tests.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[HIGH] eval_with_dynamic_input
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/bluebird/js/browser/bluebird.js
+Description: 使用动态输入执行eval函数
+
+[HIGH] eval_with_dynamic_input
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/bluebird/js/main/util.js
+Description: 使用动态输入执行eval函数
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/ecc-jsbn/index.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/ecc-jsbn/index.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/ecc-jsbn/index.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/dhe.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/fingerprint.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/fingerprint.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/fingerprint.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/fingerprint.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/ed-compat.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/ed-compat.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/ed-compat.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/ed-compat.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/ssh-buffer.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/certificate.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/certificate.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/signature.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/algs.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/private-key.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/private-key.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/private-key.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/identity.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/utils.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/utils.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/utils.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/utils.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/utils.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/ssh-private.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/ssh-private.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/ssh-private.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/ssh-private.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/openssh-cert.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/putty.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/putty.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/putty.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/putty.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/putty.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/putty.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/putty.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/putty.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/putty.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/x509-pem.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pem.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pem.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pem.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pem.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/x509.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/ssh.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/ssh.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/ssh.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs8.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs8.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs8.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs8.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs8.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs8.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/pkcs8.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/auto.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/dnssec.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/dnssec.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/dnssec.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/dnssec.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/dnssec.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/dnssec.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/dnssec.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/sshpk/lib/formats/rfc4253.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/uuid/dist/sha1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/uuid/dist/sha1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/uuid/dist/md5.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/uuid/dist/md5.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/uuid/dist/esm-node/sha1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/uuid/dist/esm-node/sha1.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/uuid/dist/esm-node/md5.js
+Description: 使用Base64编码，可能用于混淆数据
+
+[LOW] base64_encoding
+File: /Users/shihuaguo/Documents/GitHub/testnpm/node_modules/uuid/dist/esm-node/md5.js
+Description: 使用Base64编码，可能用于混淆数据
+
