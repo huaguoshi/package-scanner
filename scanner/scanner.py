@@ -19,37 +19,59 @@ SUPPORTED_LANGUAGES = {
 }
 
 class Scanner:
-    """Directory scanner, responsible for scanning project files"""
+    """目录扫描器，负责扫描项目文件"""
     
-    def __init__(self, target_path: str, skip_dts: bool = False):
+    def __init__(self, target_path: str, skip_dts: bool = False, skip_dist: bool = True):
         """
-        Initialize scanner with target path
+        初始化扫描器
         
         Args:
-            target_path: Path to scan
-            skip_dts: Whether to skip TypeScript definition files (.d.ts)
+            target_path: 要扫描的路径
+            skip_dts: 是否跳过TypeScript定义文件(.d.ts)
+            skip_dist: 是否跳过dist目录(通常包含压缩的构建代码)
         """
         self.target_path = os.path.abspath(target_path)
         self.file_list = []
         self.skip_dts = skip_dts
+        self.skip_dist = skip_dist
         
     def scan(self) -> List[Tuple[str, str]]:
         """
-        Scan directory for supported files
+        扫描目录下的支持文件
         
         Returns:
-            List of (file_path, language) tuples
+            文件路径和语言类型的元组列表
         """
-        logger.info(f"Starting scan: {self.target_path}")
+        logger.info(f"开始扫描: {self.target_path}")
         if not os.path.exists(self.target_path):
-            logger.error(f"Target path does not exist: {self.target_path}")
+            logger.error(f"目标路径不存在: {self.target_path}")
             return []
             
-        for root, _, files in os.walk(self.target_path):
+        for root, dirs, files in os.walk(self.target_path):
+            # 跳过dist目录
+            if self.skip_dist:
+                # 修改dirs列表来避免递归进入某些目录
+                dirs[:] = [d for d in dirs if d != 'dist']
+                
+                # 对于node_modules内的包，也跳过min和bundle目录
+                if 'node_modules' in root:
+                    dirs[:] = [d for d in dirs if not (
+                        d == 'min' or 
+                        d == 'bundle' or 
+                        d == 'bundled' or 
+                        d.endswith('.min') or 
+                        d.endswith('-dist')
+                    )]
+            
             for file in files:
-                # 跳过TypeScript定义文件(.d.ts)的选项
+                # 跳过TypeScript定义文件
                 if self.skip_dts and file.endswith('.d.ts'):
-                    logger.debug(f"Skipping TypeScript definition file: {file}")
+                    logger.debug(f"跳过TypeScript定义文件: {file}")
+                    continue
+                
+                # 跳过压缩和编译后的js文件
+                if file.endswith('.min.js') or file.endswith('.bundle.js'):
+                    logger.debug(f"跳过压缩/打包JS文件: {file}")
                     continue
                     
                 file_path = os.path.join(root, file)
@@ -60,7 +82,7 @@ class Scanner:
                         self.file_list.append((file_path, lang))
                         break
                         
-        logger.info(f"Scan complete, found {len(self.file_list)} files")
+        logger.info(f"扫描完成，共发现 {len(self.file_list)} 个文件")
         return self.file_list
     
     def detect_package_manager(self) -> List[str]:

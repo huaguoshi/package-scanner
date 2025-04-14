@@ -1,0 +1,94 @@
+# rules/high_rules.yaml
+# 高危风险规则
+
+- rule_name: "eval_with_dynamic_input"
+  description: "使用动态输入执行eval函数"
+  language: "javascript"
+  match:
+    type: "eval"
+    args_not_literal: true
+  severity: "high"
+
+- rule_name: "obfuscated_code_pattern"
+  description: "高度混淆的代码模式"
+  language: "javascript"
+  pattern: "_0x[a-f0-9]{4,}\\s*\\("
+  context_lines: 3
+  min_occurrences: 3
+  severity: "high"
+
+- rule_name: "hex_array_obfuscation"
+  description: "使用十六进制数组混淆的代码"
+  language: "javascript"
+  pattern: "var\\s+_0x[a-f0-9]{4,}\\s*=\\s*\\[.+?\\]"
+  context_lines: 3
+  severity: "high"
+
+- rule_name: "function_deobfuscation_pattern"
+  description: "典型的函数解混淆模式"
+  language: "javascript"
+  pattern: "function\\s+_0x[a-f0-9]{4,}\\s*\\([^)]*\\)\\s*{\\s*return\\s+_0x[a-f0-9]{4,}\\[.+?\\]\\s*;?\\s*}"
+  context_lines: 3
+  severity: "high"
+
+- rule_name: "suspicious_setTimeout"
+  description: "使用字符串作为setTimeout的回调"
+  language: "javascript"
+  match:
+    type: "setTimeout_with_string"
+  severity: "high"
+
+- rule_name: "suspicious_setInterval"
+  description: "使用字符串作为setInterval的回调"
+  language: "javascript"
+  match:
+    type: "setInterval_with_string" 
+  severity: "high"
+
+- rule_name: "leak_private_key_http"
+  description: "向外部传输私钥的HTTP请求"
+  language: "javascript"
+  match:
+    type: "CallExpression"
+    callee_pattern: "fetch|axios|request|ajax|http"
+    args_contains: "http"
+    headers_contains: "private_key|token|secret|api[_-]?key"
+  severity: "high"
+
+- rule_name: "suspicious_install_script"
+  description: "可疑的安装脚本"
+  language: "javascript"
+  pattern: "(\"preinstall\"|\"postinstall\"|\"install\")\"\\s*:\\s*\".*?(curl|wget|https?:\\/\\/)"
+  negative_pattern: "(\\/\\/|\\/\\*|\\*|\\.com|\\.org|\\.net|@see|test|example)"
+  file_pattern: "package\\.json$"
+  severity: "high"
+
+- rule_name: "python_exec_eval"
+  description: "使用exec或eval执行动态代码"
+  language: "python"
+  pattern: "(exec|eval)\\s*\\("
+  severity: "high"
+
+- rule_name: "python_requests_with_sensitive"
+  description: "包含敏感信息的HTTP请求"
+  language: "python"
+  pattern: "requests\\.(get|post|put)\\s*\\([^)]*(\\'|\\\")?(api[_-]?key|token|password|secret|private[_-]?key)(\\'|\\\")?\\s*:"
+  severity: "high"
+
+- rule_name: "go_http_request"
+  description: "包含敏感信息的HTTP请求"
+  language: "go"
+  pattern: "http\\.(NewRequest|Post|Get)\\s*\\([^)]*\\\"(api[_-]?key|token|password|secret|private[_-]?key)\\\""
+  severity: "high"
+
+- rule_name: "rust_http_with_sensitive"
+  description: "包含敏感信息的HTTP请求"
+  language: "rust"
+  pattern: "(reqwest|hyper|curl).*\\\"(api[_-]?key|token|password|secret|private[_-]?key)\\\""
+  severity: "high"
+
+- rule_name: "minified_obfuscated_large_function"
+  description: "大型的混淆或压缩函数"
+  language: "javascript"
+  pattern: "function\\s*\\([^)]{1,10}\\)\\s*{.{500,}"
+  severity: "high"
