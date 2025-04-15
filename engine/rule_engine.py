@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Rule engine implementation
+更新后的规则引擎，支持更多功能
 """
 
 import os
@@ -9,25 +9,48 @@ import re
 import json
 import yaml
 import logging
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple, Pattern
 
 logger = logging.getLogger('package-scanner.engine')
 
 class RuleEngine:
-    """Rule engine, responsible for loading and executing detection rules"""
+    """规则引擎，负责加载和执行检测规则"""
     
     def __init__(self):
-        """Initialize rule engine"""
+        """初始化规则引擎"""
         self.rules = []
         self.rule_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'rules')
+        # 创建规则目录（如果不存在）
         os.makedirs(self.rule_dir, exist_ok=True)
+        # 缓存已编译的正则表达式
+        self.regex_cache = {}
+        
+    def _compile_regex(self, pattern: str) -> Pattern:
+        """
+        编译正则表达式并缓存结果
+        
+        Args:
+            pattern: 正则表达式模式
+            
+        Returns:
+            编译后的正则表达式
+        """
+        if pattern not in self.regex_cache:
+            try:
+                self.regex_cache[pattern] = re.compile(pattern, re.MULTILINE)
+            except re.error as e:
+                logger.error(f"正则表达式编译失败: {pattern}, 错误: {e}")
+                # 返回一个永远不会匹配的正则表达式
+                self.regex_cache[pattern] = re.compile(r'^\b$')
+                
+        return self.regex_cache[pattern]
         
     def load_rules(self, language: Optional[str] = None) -> None:
         """
-        Load rules from rule files
+        加载规则文件
         
         Args:
-            language: Optional language filter
+            language: 可选的语言过滤器
         """
         rule_files = []
         
@@ -36,13 +59,13 @@ class RuleEngine:
                 rule_files.append(os.path.join(self.rule_dir, file))
                 
         if not rule_files:
-            logger.warning("No rule files found. Please create rules in the 'rules' directory")
+            logger.warning("未找到规则文件。请在 'rules' 目录中创建规则文件")
             return
             
         self.rules = []
         for rule_file in rule_files:
             try:
-                with open(rule_file, 'r') as f:
+                with open(rule_file, 'r', encoding='utf-8') as f:
                     if rule_file.endswith(('.yaml', '.yml')):
                         rules = yaml.safe_load(f)
                     else:
@@ -56,27 +79,79 @@ class RuleEngine:
                         if language is None or rules.get('language') == language:
                             self.rules.append(rules)
             except Exception as e:
-                logger.error(f"Failed to load rule file: {rule_file}, error: {e}")
+                logger.error(f"加载规则文件失败: {rule_file}, 错误: {e}")
                 
-        logger.info(f"Loaded {len(self.rules)} rules")
+        logger.info(f"已加载 {len(self.rules)} 条规则")
+        
+    def load_rules_by_severity(self, severity: str) -> None:
+        """
+        按严重性加载规则
+        
+        Args:
+            severity: 规则严重性级别
+        """
+        rule_files = []
+        
+        # 找到特定严重性规则文件
+        severity_files = [f for f in os.listdir(self.rule_dir) 
+                          if f.startswith(severity.lower()) and f.endswith(('.yaml', '.yml', '.json'))]
+        
+        if severity_files:
+            # 如果找到特定严重性规则文件，只加载这些文件
+            for file in severity_files:
+                rule_files.append(os.path.join(self.rule_dir, file))
+        else:
+            # 否则，加载所有规则并根据严重性过滤
+            for file in os.listdir(self.rule_dir):
+                if file.endswith(('.yaml', '.yml', '.json')):
+                    rule_files.append(os.path.join(self.rule_dir, file))
+        
+        if not rule_files:
+            logger.warning(f"未找到{severity}级别的规则文件。")
+            return
+            
+        self.rules = []
+        for rule_file in rule_files:
+            try:
+                with open(rule_file, 'r', encoding='utf-8') as f:
+                    if rule_file.endswith(('.yaml', '.yml')):
+                        rules = yaml.safe_load(f)
+                    else:
+                        rules = json.load(f)
+                    
+                    if isinstance(rules, list):
+                        for rule in rules:
+                            # 如果存在特定严重性规则文件，直接加载所有规则
+                            if severity_files:
+                                self.rules.append(rule)
+                            # 否则根据严重性过滤
+                            elif rule.get('severity', '').lower() == severity.lower():
+                                self.rules.append(rule)
+                    elif isinstance(rules, dict):
+                        if severity_files or rules.get('severity', '').lower() == severity.lower():
+                            self.rules.append(rules)
+            except Exception as e:
+                logger.error(f"加载规则文件失败: {rule_file}, 错误: {e}")
+                
+        logger.info(f"已加载 {len(self.rules)} 条{severity}级别的规则")
         
     def match_ast_rule(self, rule: Dict, ast_data: Dict) -> List[Dict]:
         """
-        Match AST-based rules against parsed data
+        匹配基于AST的规则
         
         Args:
-            rule: Rule definition dictionary
-            ast_data: AST data from parser
+            rule: 规则定义
+            ast_data: AST数据
             
         Returns:
-            List of match results
+            匹配结果列表
         """
         matches = []
         
         match_criteria = rule.get('match', {})
         rule_type = match_criteria.get('type')
         
-        # Handle different types of AST rules
+        # 处理不同类型的AST规则
         if rule_type == 'CallExpression':
             callee_pattern = match_criteria.get('callee_pattern', '')
             args_contains = match_criteria.get('args_contains', '')
@@ -87,7 +162,7 @@ class RuleEngine:
                                              for pattern in callee_pattern.split('|')):
                     continue
                     
-                # Check arguments
+                # 检查参数
                 args_match = False
                 if not args_contains:
                     args_match = True
@@ -101,7 +176,7 @@ class RuleEngine:
                 if not args_match:
                     continue
                     
-                # Check headers for sensitive info
+                # 检查header是否包含敏感信息
                 if headers_contains:
                     headers_match = False
                     for arg in call.get('args', []):
@@ -126,7 +201,7 @@ class RuleEngine:
             
             for eval_call in ast_data.get('evals', []):
                 if args_not_literal:
-                    # Check for non-literal arguments
+                    # 检查是否有非字面量参数
                     for arg in eval_call.get('args', []):
                         if not arg.startswith('"') and not arg.startswith("'"):
                             matches.append({
@@ -178,32 +253,123 @@ class RuleEngine:
                 
         return matches
         
-    def match_pattern_rule(self, rule: Dict, file_path: str, file_content: str) -> List[Dict]:
+    def match_pattern_rule(self, rule: Dict, file_path: str, file_content: str, context_lines: int = 2) -> List[Dict]:
         """
-        Match pattern-based rules against file content
+        匹配基于模式的规则
         
         Args:
-            rule: Rule definition dictionary
-            file_path: Path to the file
-            file_content: Content of the file
+            rule: 规则定义
+            file_path: 文件路径
+            file_content: 文件内容
+            context_lines: 上下文行数
             
         Returns:
-            List of match results
+            匹配结果列表
         """
         matches = []
         
         pattern = rule.get('pattern')
         if not pattern:
             return []
+        
+        # 检查文件名是否匹配
+        file_pattern = rule.get('file_pattern')
+        if file_pattern and not re.search(file_pattern, file_path):
+            return []
+
+        # 编译正则表达式
+        regex = self._compile_regex(pattern)
+        
+        # 检查是否有负向模式
+        negative_pattern = rule.get('negative_pattern')
+        negative_regex = None
+        if negative_pattern:
+            negative_regex = self._compile_regex(negative_pattern)
             
-        for i, line in enumerate(file_content.splitlines(), 1):
-            if re.search(pattern, line):
-                matches.append({
-                    'rule': rule.get('rule_name'),
-                    'description': rule.get('description'),
-                    'severity': rule.get('severity', 'medium'),
-                    'location': {'line': i, 'file': file_path},
-                    'details': line.strip()
-                })
+        # 获取规则的最小出现次数
+        min_occurrences = rule.get('min_occurrences', 1)
+        
+        # 查找所有匹配
+        all_matches = list(regex.finditer(file_content))
+        
+        # 如果匹配数小于最小出现次数，则返回空
+        if len(all_matches) < min_occurrences:
+            return []
+            
+        # 计算文件的行偏移量，用于定位行号
+        line_offsets = [0]
+        for i, char in enumerate(file_content):
+            if char == '\n':
+                line_offsets.append(i + 1)
+                
+        # 处理每个匹配
+        for match in all_matches:
+            # 如果有负向模式，则检查匹配是否符合负向模式
+            if negative_regex and negative_regex.match(match.group(0)):
+                continue
+                
+            # 获取匹配文本
+            match_text = match.group(0)
+            
+            # 计算行号和列号
+            start_pos = match.start()
+            line_idx = 0
+            while line_idx < len(line_offsets) and line_offsets[line_idx] <= start_pos:
+                line_idx += 1
+            line_idx -= 1
+            line_number = line_idx + 1
+            column = start_pos - line_offsets[line_idx] + 1
+            
+            # 获取上下文行
+            context = self._get_context_lines(file_content, line_offsets, line_idx, context_lines)
+            
+            # 添加匹配结果
+            matches.append({
+                'rule': rule.get('rule_name'),
+                'description': rule.get('description'),
+                'severity': rule.get('severity', 'medium'),
+                'location': {'line': line_number, 'column': column, 'file': file_path},
+                'details': f"{match_text[:100]}{'...' if len(match_text) > 100 else ''}",
+                'context': context
+            })
                 
         return matches
+        
+    def _get_context_lines(self, content: str, line_offsets: List[int], line_idx: int, context_lines: int) -> Dict:
+        """
+        获取匹配行的上下文
+        
+        Args:
+            content: 文件内容
+            line_offsets: 行偏移量列表
+            line_idx: 当前行索引
+            context_lines: 上下文行数
+            
+        Returns:
+            上下文信息字典
+        """
+        start_idx = max(0, line_idx - context_lines)
+        end_idx = min(len(line_offsets) - 1, line_idx + context_lines)
+        
+        context_content = []
+        for i in range(start_idx, end_idx + 1):
+            if i == len(line_offsets) - 1:
+                line = content[line_offsets[i]:]
+            else:
+                line = content[line_offsets[i]:line_offsets[i+1]]
+                
+            if line.endswith('\n'):
+                line = line[:-1]
+                
+            context_content.append({
+                'line_number': i + 1,
+                'content': line,
+                'is_match': i == line_idx
+            })
+            
+        return {
+            'lines': context_content,
+            'start_line': start_idx + 1,
+            'end_line': end_idx + 1,
+            'match_line': line_idx + 1
+        }

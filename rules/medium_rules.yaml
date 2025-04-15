@@ -1,0 +1,71 @@
+# rules/medium_rules.yaml
+# 中等风险规则
+
+- rule_name: "dynamic_require"
+  description: "使用动态输入执行require函数"
+  language: "javascript"
+  match:
+    type: "dynamic_require"
+  severity: "medium"
+
+- rule_name: "obfuscated_code"
+  description: "可能混淆的代码"
+  language: "javascript"
+  match:
+    type: "string_concat"
+    min_occurrences: 5
+  severity: "medium"
+
+- rule_name: "environment_detection"
+  description: "环境检测，可能用于沙箱逃逸"
+  language: "javascript"
+  match:
+    type: "environment_detection"
+    min_occurrences: 2
+  severity: "medium"
+
+- rule_name: "python_os_system"
+  description: "执行系统命令"
+  language: "python"
+  pattern: "(os\\.(system|popen)|subprocess\\.(call|Popen|run))\\s*\\("
+  severity: "medium"
+
+- rule_name: "python_encoded_payload"
+  description: "使用编码的负载"
+  language: "python"
+  pattern: "(base64\\.(b64encode|b64decode)|codecs\\.(encode|decode))"
+  severity: "medium"
+
+- rule_name: "go_exec_command"
+  description: "执行系统命令"
+  language: "go"
+  pattern: "exec\\.(Command|CommandContext)\\s*\\("
+  severity: "medium"
+
+- rule_name: "rust_command_execution"
+  description: "执行系统命令"
+  language: "rust"
+  pattern: "Command::new\\s*\\("
+  severity: "medium"
+
+- rule_name: "json_parse_eval"
+  description: "使用JSON.parse处理可能的恶意数据"
+  language: "javascript"
+  pattern: "JSON\\.parse\\s*\\([^)]+\\)"
+  negative_pattern: "JSON\\.parse\\s*\\(\\s*['\"][^'\"]{1,100}['\"]\\s*\\)"
+  severity: "medium"
+
+- rule_name: "browser_fingerprinting"
+  description: "检测浏览器指纹"
+  language: "javascript"
+  pattern: "navigator\\.(userAgent|platform|language|plugins|vendor)|screen\\.(width|height|colorDepth|pixelDepth)"
+  min_occurrences: 3
+  severity: "medium"
+
+  # 针对一般代码中可疑HTTP请求的规则
+- rule_name: "suspicious_http_request"
+  description: "可疑的HTTP请求"
+  language: "javascript"
+  pattern: "(fetch|axios|request)\\s*\\(.*?(https?:\\/\\/|api_key|token|password|secret)"
+  negative_pattern: "(\\/\\/|\\/\\*|\\*|\\.com|\\.org|\\.net|@see|test|example)"
+  severity: "medium"
