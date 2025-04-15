@@ -21,7 +21,9 @@ SUPPORTED_LANGUAGES = {
 class Scanner:
     """目录扫描器，负责扫描项目文件"""
     
-    def __init__(self, target_path: str, skip_dts: bool = False, skip_dist: bool = True):
+    def __init__(self, target_path: str, skip_dts: bool = False, skip_dist: bool = True,
+                 whitelist_file: str = "wl_pkg.ini", greylist_file: str = "gl_pkg.ini",
+                 skip_whitelist: bool = True, skip_greylist: bool = True):
         """
         初始化扫描器
         
@@ -29,12 +31,38 @@ class Scanner:
             target_path: 要扫描的路径
             skip_dts: 是否跳过TypeScript定义文件(.d.ts)
             skip_dist: 是否跳过dist目录(通常包含压缩的构建代码)
+            whitelist_file: 白名单npm包列表文件路径
+            greylist_file: 灰名单npm包列表文件路径
+            skip_whitelist: 是否跳过白名单中的包
+            skip_greylist: 是否跳过灰名单中的包
         """
         self.target_path = os.path.abspath(target_path)
         self.file_list = []
         self.skip_dts = skip_dts
         self.skip_dist = skip_dist
+        self.skip_whitelist = skip_whitelist
+        self.skip_greylist = skip_greylist
+        self.whitelist = []
+        self.greylist = []
         
+        # 加载白名单
+        if whitelist_file and os.path.exists(whitelist_file) and self.skip_whitelist:
+            try:
+                with open(whitelist_file, 'r') as f:
+                    self.whitelist = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+                logger.info(f"已加载 {len(self.whitelist)} 个白名单包")
+            except Exception as e:
+                logger.error(f"加载白名单文件失败: {e}")
+                
+        # 加载灰名单
+        if greylist_file and os.path.exists(greylist_file) and self.skip_greylist:
+            try:
+                with open(greylist_file, 'r') as f:
+                    self.greylist = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+                logger.info(f"已加载 {len(self.greylist)} 个灰名单包")
+            except Exception as e:
+                logger.error(f"加载灰名单文件失败: {e}")
+                        
     def scan(self) -> List[Tuple[str, str]]:
         """
         扫描目录下的支持文件

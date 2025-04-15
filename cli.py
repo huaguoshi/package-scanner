@@ -143,6 +143,10 @@ def analyze_package_json(file_path: str) -> Dict:
 
 def main():
     """主函数"""
+    # 默认文件名
+    DEFAULT_WL_FILE = "wl_pkg.ini"
+    DEFAULT_GL_FILE = "gl_pkg.ini"
+
     parser = argparse.ArgumentParser(description='第三方包供应链攻击检测工具')
     parser.add_argument('target', help='目标目录或包路径')
     parser.add_argument('--output', '-o', help='报告输出格式 (json, text)', default='text')
@@ -159,6 +163,15 @@ def main():
                     help='包含dist目录和压缩文件')
     parser.add_argument('--max-context', '-M', type=int, default=300, 
                     help='代码上下文最大字符数 (默认: 300)')
+
+    parser.add_argument('--whitelist-file', default=DEFAULT_WL_FILE, 
+                    help=f'白名单npm包列表文件路径 (默认: {DEFAULT_WL_FILE})')
+    parser.add_argument('--greylist-file', default=DEFAULT_GL_FILE, 
+                    help=f'灰名单npm包列表文件路径 (默认: {DEFAULT_GL_FILE})')
+    parser.add_argument('--no-whitelist', action='store_false', dest='skip_whitelist',
+                    help='不跳过白名单中的包(默认跳过)')
+    parser.add_argument('--no-greylist', action='store_false', dest='skip_greylist',
+                    help='不跳过灰名单中的包(默认跳过)')
 
     args = parser.parse_args()
     
@@ -198,8 +211,15 @@ def main():
     
     # 标准扫描流程
     # 步骤1: 扫描目录
-    scanner = Scanner(args.target, skip_dts=args.skip_dts, skip_dist=args.skip_dist)
-
+    scanner = Scanner(
+        args.target, 
+        skip_dts=args.skip_dts, 
+        skip_dist=args.skip_dist,
+        whitelist_file=args.whitelist_file, 
+        greylist_file=args.greylist_file,
+        skip_whitelist=args.skip_whitelist, 
+        skip_greylist=args.skip_greylist
+    )
     files = scanner.scan()
     package_managers = scanner.detect_package_manager() or []
     
