@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-更新后的CLI主入口，支持所有新功能
+第三方包供应链攻击检测工具
+
+主CLI入口点
 """
 
 import os
 import sys
+import re
+import json
+import yaml
 import argparse
 import datetime
 import logging
@@ -33,6 +38,10 @@ from engine import RuleEngine
 from node_parser import NodeParser
 from reporter import Reporter
 
+# 默认文件路径
+DEFAULT_WHITELIST_FILE = os.path.join('package_lists', 'whitelist.ini')
+DEFAULT_GRAYLIST_FILE = os.path.join('package_lists', 'graylist.ini')
+
 def analyze_javascript_code(file_path: str, engine: RuleEngine) -> List[Dict]:
     """
     分析JavaScript文件中的恶意模式
@@ -59,7 +68,7 @@ def analyze_javascript_code(file_path: str, engine: RuleEngine) -> List[Dict]:
         logger.error(f"分析JavaScript代码失败: {file_path}, 错误: {e}")
         return []
 
-def scan_for_patterns(file_path: str, language: str, engine: RuleEngine) -> List[Dict]:
+def scan_for_patterns(file_path: str, language: str, engine: RuleEngine, context_lines: int = 2) -> List[Dict]:
     """
     使用模式匹配扫描文件
     
@@ -67,6 +76,7 @@ def scan_for_patterns(file_path: str, language: str, engine: RuleEngine) -> List
         file_path: 文件路径
         language: 编程语言
         engine: 规则引擎实例
+        context_lines: 上下文行数
         
     Returns:
         检测到的问题列表
@@ -79,8 +89,8 @@ def scan_for_patterns(file_path: str, language: str, engine: RuleEngine) -> List
         for rule in engine.rules:
             if rule.get('language') == language and 'pattern' in rule:
                 # 获取上下文行数设置
-                context_lines = rule.get('context_lines', 2)
-                rule_matches = engine.match_pattern_rule(rule, file_path, content, context_lines)
+                rule_context_lines = rule.get('context_lines', context_lines)
+                rule_matches = engine.match_pattern_rule(rule, file_path, content, rule_context_lines)
                 matches.extend(rule_matches)
                 
         return matches
@@ -143,36 +153,30 @@ def analyze_package_json(file_path: str) -> Dict:
 
 def main():
     """主函数"""
-    # 默认文件名
-    DEFAULT_WL_FILE = "wl_pkg.ini"
-    DEFAULT_GL_FILE = "gl_pkg.ini"
-
     parser = argparse.ArgumentParser(description='第三方包供应链攻击检测工具')
     parser.add_argument('target', help='目标目录或包路径')
     parser.add_argument('--output', '-o', help='报告输出格式 (json, text)', default='text')
     parser.add_argument('--verbose', '-v', action='store_true', help='输出详细日志')
     parser.add_argument('--skip-dts', '-s', action='store_true', help='跳过TypeScript定义文件(.d.ts)')
+    parser.add_argument('--include-dist', '-I', action='store_false', dest='skip_dist',
+                       help='包含dist目录和压缩文件(默认跳过)')
     parser.add_argument('--rules-dir', '-r', help='规则目录路径')
     parser.add_argument('--context-lines', '-c', type=int, default=2, help='显示的上下文行数')
+    parser.add_argument('--max-context', '-M', type=int, default=300, help='代码上下文最大字符数')
     parser.add_argument('--severity', '-S', choices=['high', 'medium', 'low', 'all'], default='all', 
-                      help='只报告指定严重性的问题')
-    parser.add_argument('--obfuscation-only', '-O', action='store_true', help='只检测代码混淆')
-    parser.add_argument('--skip-dist', '-D', action='store_true', default=True,
-                    help='跳过dist目录和压缩文件(默认开启)')
-    parser.add_argument('--include-dist', '-I', action='store_false', dest='skip_dist',
-                    help='包含dist目录和压缩文件')
-    parser.add_argument('--max-context', '-M', type=int, default=300, 
-                    help='代码上下文最大字符数 (默认: 300)')
-
-    parser.add_argument('--whitelist-file', default=DEFAULT_WL_FILE, 
-                    help=f'白名单npm包列表文件路径 (默认: {DEFAULT_WL_FILE})')
-    parser.add_argument('--greylist-file', default=DEFAULT_GL_FILE, 
-                    help=f'灰名单npm包列表文件路径 (默认: {DEFAULT_GL_FILE})')
+                       help='只报告指定严重性的问题')
+    parser.add_argument('--obfuscation-only', '-O', action='store_true', help='仅检测代码混淆')
+    
+    # 白名单和灰名单参数
+    parser.add_argument('--whitelist-file', default=DEFAULT_WHITELIST_FILE, 
+                       help=f'白名单npm包列表文件路径 (默认: {DEFAULT_WHITELIST_FILE})')
+    parser.add_argument('--graylist-file', default=DEFAULT_GRAYLIST_FILE, 
+                       help=f'灰名单npm包列表文件路径 (默认: {DEFAULT_GRAYLIST_FILE})')
     parser.add_argument('--no-whitelist', action='store_false', dest='skip_whitelist',
-                    help='不跳过白名单中的包(默认跳过)')
-    parser.add_argument('--no-greylist', action='store_false', dest='skip_greylist',
-                    help='不跳过灰名单中的包(默认跳过)')
-
+                       help='不跳过白名单中的包(默认跳过)')
+    parser.add_argument('--no-graylist', action='store_false', dest='skip_graylist',
+                       help='不跳过灰名单中的包(默认跳过)')
+    
     args = parser.parse_args()
     
     if args.verbose:
@@ -181,6 +185,10 @@ def main():
     
     start_time = datetime.datetime.now()
     print(f"开始扫描: {args.target}\n")
+    
+    # 创建package_lists目录(如果不存在)
+    package_lists_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'package_lists')
+    os.makedirs(package_lists_dir, exist_ok=True)
     
     # 如果只检测混淆，使用专门的混淆检测器
     if args.obfuscation_only:
@@ -216,9 +224,9 @@ def main():
         skip_dts=args.skip_dts, 
         skip_dist=args.skip_dist,
         whitelist_file=args.whitelist_file, 
-        greylist_file=args.greylist_file,
+        graylist_file=args.graylist_file,
         skip_whitelist=args.skip_whitelist, 
-        skip_greylist=args.skip_greylist
+        skip_graylist=args.skip_graylist
     )
     files = scanner.scan()
     package_managers = scanner.detect_package_manager() or []
@@ -232,11 +240,24 @@ def main():
         
     # 根据严重性级别加载规则
     if args.severity != 'all':
-        # 只加载指定严重性的规则
+        # 直接加载指定严重性的规则文件
         engine.load_rules_by_severity(args.severity)
     else:
-        # 加载所有规则
-        engine.load_rules()
+        # 尝试首先加载分类的规则文件
+        severities = ['high', 'medium', 'low']
+        rules_loaded = False
+        
+        for severity in severities:
+            # 检查是否存在对应的规则文件
+            severity_files = [f for f in os.listdir(engine.rule_dir) 
+                             if f.startswith(severity) and f.endswith(('.yaml', '.yml', '.json'))]
+            if severity_files:
+                engine.load_rules_by_severity(severity)
+                rules_loaded = True
+        
+        # 如果没有找到分类规则文件，则加载所有规则
+        if not rules_loaded:
+            engine.load_rules()
     
     # 步骤3: 初始化报告器
     reporter = Reporter(context_lines=args.context_lines, max_context_chars=args.max_context)
@@ -249,11 +270,11 @@ def main():
         if language == 'javascript':
             matches = analyze_javascript_code(file_path, engine)
             # 同时使用模式匹配进行补充
-            pattern_matches = scan_for_patterns(file_path, language, engine)
+            pattern_matches = scan_for_patterns(file_path, language, engine, args.context_lines)
             matches.extend(pattern_matches)
         else:
             # 对其他语言使用模式匹配
-            matches = scan_for_patterns(file_path, language, engine)
+            matches = scan_for_patterns(file_path, language, engine, args.context_lines)
             
         if matches:
             reporter.add_result(file_path, matches)

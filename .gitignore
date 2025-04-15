@@ -1,3 +1,4 @@
 .DS_Store
 node_parser/node_modules/
 report/
+scanner/__pycache__/
