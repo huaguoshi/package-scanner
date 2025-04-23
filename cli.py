@@ -165,7 +165,8 @@ def main():
     parser.add_argument('--max-context', '-M', type=int, default=300, help='代码上下文最大字符数')
     parser.add_argument('--severity', '-S', choices=['high', 'medium', 'low', 'all'], default='all', 
                        help='只报告指定严重性的问题')
-    parser.add_argument('--obfuscation-only', '-O', action='store_true', help='仅检测代码混淆')
+    parser.add_argument('--split-reports', action='store_true', help='生成分开的高中低风险报告')
+    parser.add_argument('--debug-rules', action='store_true', help='输出规则加载和匹配的调试信息')
     
     # 白名单和灰名单参数
     parser.add_argument('--whitelist-file', default=DEFAULT_WHITELIST_FILE, 
@@ -179,7 +180,7 @@ def main():
     
     args = parser.parse_args()
     
-    if args.verbose:
+    if args.verbose or args.debug_rules:
         logger.setLevel(logging.DEBUG)
         logging.getLogger('package-scanner').setLevel(logging.DEBUG)
     
@@ -190,32 +191,9 @@ def main():
     package_lists_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'package_lists')
     os.makedirs(package_lists_dir, exist_ok=True)
     
-    # 如果只检测混淆，使用专门的混淆检测器
-    if args.obfuscation_only:
-        try:
-            from obfuscation_detector import ObfuscationDetector
-            detector = ObfuscationDetector(context_lines=args.context_lines)
-            
-            if os.path.isfile(args.target):
-                results = detector.scan_file(args.target)
-            else:
-                results = detector.scan_directory(args.target, recursive=True)
-                
-            detector.print_results(results)
-            
-            if args.output:
-                output_file = f"obfuscation_report_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.{args.output}"
-                if args.output == 'json':
-                    detector.save_results(results, output_file)
-                else:
-                    detector.generate_report(results, output_file)
-            
-            end_time = datetime.datetime.now()
-            duration = (end_time - start_time).total_seconds()
-            print(f"\n混淆检测完成，用时: {duration:.2f} 秒")
-            return
-        except ImportError:
-            logger.warning("混淆检测器模块不可用，回退到标准扫描")
+    # 创建report目录(如果不存在)
+    report_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'report')
+    os.makedirs(report_dir, exist_ok=True)
     
     # 标准扫描流程
     # 步骤1: 扫描目录
@@ -237,47 +215,63 @@ def main():
     # 如果指定了规则目录，使用指定目录
     if args.rules_dir and os.path.isdir(args.rules_dir):
         engine.rule_dir = args.rules_dir
-        
+    
     # 根据严重性级别加载规则
     if args.severity != 'all':
         # 直接加载指定严重性的规则文件
         engine.load_rules_by_severity(args.severity)
+        if args.debug_rules:
+            print(f"已加载 {args.severity} 规则: {len(engine.rules)} 条")
+            for i, rule in enumerate(engine.rules):
+                print(f"  规则 {i+1}: {rule.get('rule_name')} ({rule.get('severity', '未知')})")
     else:
-        # 尝试首先加载分类的规则文件
-        severities = ['high', 'medium', 'low']
-        rules_loaded = False
+        # 修改: 不再尝试一次加载所有规则，而是分别加载各个级别的规则
+        all_rules = []
+        for severity in ['high', 'medium', 'low']:
+            # 为每个级别单独创建一个规则引擎实例
+            temp_engine = RuleEngine()
+            if args.rules_dir and os.path.isdir(args.rules_dir):
+                temp_engine.rule_dir = args.rules_dir
+            
+            temp_engine.load_rules_by_severity(severity)
+            
+            if args.debug_rules:
+                print(f"已加载 {severity} 规则: {len(temp_engine.rules)} 条")
+                for i, rule in enumerate(temp_engine.rules):
+                    print(f"  规则 {i+1}: {rule.get('rule_name')} ({rule.get('severity', '未知')})")
+            
+            # 将规则添加到总规则列表
+            all_rules.extend(temp_engine.rules)
         
-        for severity in severities:
-            # 检查是否存在对应的规则文件
-            severity_files = [f for f in os.listdir(engine.rule_dir) 
-                             if f.startswith(severity) and f.endswith(('.yaml', '.yml', '.json'))]
-            if severity_files:
-                engine.load_rules_by_severity(severity)
-                rules_loaded = True
+        # 更新主规则引擎的规则列表
+        engine.rules = all_rules
         
-        # 如果没有找到分类规则文件，则加载所有规则
-        if not rules_loaded:
-            engine.load_rules()
+        if args.debug_rules:
+            print(f"总共加载规则: {len(engine.rules)} 条")
     
     # 步骤3: 初始化报告器
     reporter = Reporter(context_lines=args.context_lines, max_context_chars=args.max_context)
     
     # 步骤4: 分析文件
     for file_path, language in files:
-        print(f"分析文件: {os.path.basename(file_path)} ({language})")
+        print(f"分析文件: {file_path} ({language})")
+        
+        all_matches = []  # 存放所有匹配结果
         
         # 基于文件类型选择分析方法
         if language == 'javascript':
             matches = analyze_javascript_code(file_path, engine)
             # 同时使用模式匹配进行补充
             pattern_matches = scan_for_patterns(file_path, language, engine, args.context_lines)
-            matches.extend(pattern_matches)
+            all_matches.extend(matches)
+            all_matches.extend(pattern_matches)
         else:
             # 对其他语言使用模式匹配
-            matches = scan_for_patterns(file_path, language, engine, args.context_lines)
+            all_matches = scan_for_patterns(file_path, language, engine, args.context_lines)
             
-        if matches:
-            reporter.add_result(file_path, matches)
+        if all_matches:
+            # 不再处理匹配的优先级，直接添加所有匹配结果
+            reporter.add_result(file_path, all_matches)
     
     # 步骤5: 分析包管理器文件
     if 'npm' in package_managers:
@@ -286,16 +280,17 @@ def main():
             pkg_data = analyze_package_json(package_json_path)
             
             if 'suspicious_items' in pkg_data and pkg_data['suspicious_items']:
-                reporter.add_result(package_json_path, [
+                suspicious_matches = [
                     {
                         'rule': item['type'],
                         'description': f"可疑的 {item['name']} 脚本",
                         'severity': 'high',
-                        'location': {'file': package_json_path},
+                        'location': {'file': package_json_path, 'line': 0, 'column': 0},
                         'details': item['script']
                     }
                     for item in pkg_data['suspicious_items']
-                ])
+                ]
+                reporter.add_result(package_json_path, suspicious_matches)
     
     # 步骤6: 根据严重性筛选并输出报告
     if args.severity != 'all':
@@ -303,9 +298,30 @@ def main():
         if reporter.results:
             reporter.save_by_severity(args.severity, format_type=args.output)
     else:
+        # 添加调试信息：显示每个级别检测到的问题数量
+        grouped = reporter._group_results_by_severity()
+        print("\n检测结果统计:")
+        print(f"高风险问题: {len(grouped.get('high', []))} 个")
+        print(f"中风险问题: {len(grouped.get('medium', []))} 个")
+        print(f"低风险问题: {len(grouped.get('low', []))} 个")
+        
+        # 始终打印总体报告
         reporter.print_results()
+        
+        # 保存报告
         if reporter.results:
-            reporter.save_report(format_type=args.output)
+            # 保存总体报告
+            main_report = reporter.save_report(format_type=args.output)
+            print(f"已生成总体报告: {main_report}")
+            
+            # 始终为所有风险级别生成分开的报告，即使--split-reports没有设置
+            for severity in ['high', 'medium', 'low']:
+                severity_results = reporter.get_results_by_severity(severity)
+                # 只有当该级别有结果时才生成报告
+                if severity_results:
+                    print(f"\n生成{severity}级别风险报告...")
+                    severity_report = reporter.save_by_severity(severity, format_type=args.output)
+                    print(f"已生成{severity}级别报告: {severity_report}")
     
     end_time = datetime.datetime.now()
     duration = (end_time - start_time).total_seconds()

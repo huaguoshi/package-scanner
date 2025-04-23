@@ -52,7 +52,7 @@
     type: "CallExpression"
     callee_pattern: "fetch|axios|request|ajax|http"
     args_contains: "http"
-    headers_contains: "private_key|token|secret|api[_-]?key"
+    headers_contains: "private_key|token|secret|api[_-]?key|Authorization|Bearer"
   severity: "high"
 
 - rule_name: "suspicious_install_script"
@@ -87,8 +87,14 @@
   pattern: "(reqwest|hyper|curl).*\\\"(api[_-]?key|token|password|secret|private[_-]?key)\\\""
   severity: "high"
 
+
+
 - rule_name: "minified_obfuscated_large_function"
-  description: "大型的混淆或压缩函数"
+  description: "大型的混淆或压缩函数，带明显混淆符号"
   language: "javascript"
-  pattern: "function\\s*\\([^)]{1,10}\\)\\s*{.{500,}"
+  and_pattern:
+    - "function\\s*\\([^)]{1,10}\\)\\s*\\{.{500,}"  
+    #- "function\\s*\\([^)]{1,10}\\)\\s*\\{[\\s\\S].{500,}"      # 函数体很大
+    - "_0x[a-f0-9]{3,}"                                   # 混淆变量名特征
+  not_pattern: "typeof exports.*module\\.exports|define\\.amd"  # 排除 UMD 模块封装
   severity: "high"

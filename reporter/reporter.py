@@ -129,6 +129,19 @@ class Reporter:
                 grouped[severity].append(entry)
                 
         return grouped
+    
+    def get_results_by_severity(self, severity: str) -> List[Dict]:
+        """
+        获取指定严重性级别的结果
+        
+        Args:
+            severity: 严重性级别
+            
+        Returns:
+            该严重性级别的结果列表
+        """
+        grouped = self._group_results_by_severity()
+        return grouped.get(severity.lower(), [])
             
     def print_results(self, filter_severity: Optional[str] = None) -> None:
         """

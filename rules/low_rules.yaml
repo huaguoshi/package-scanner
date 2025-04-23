@@ -1,27 +1,14 @@
 # rules/low_rules.yaml
 # 低风险规则
 
-- rule_name: "base64_encoding"
-  description: "使用Base64编码，可能用于混淆数据"
-  language: "javascript"
-  pattern: "\\b(btoa|atob|Buffer\\.from|Buffer\\.toString)\\s*\\(.+?\\)"
-  negative_pattern: "\\b(btoa|atob|Buffer\\.from|Buffer\\.toString)\\s*\\([\"'][^\"']{1,30}[\"']\\)"
-  context_lines: 2
-  severity: "low"
+# - rule_name: "base64_encoding"
+#   description: "使用Base64编码，可能用于混淆数据"
+#   language: "javascript"
+#   pattern: "\\b(btoa|atob|Buffer\\.from|Buffer\\.toString)\\s*\\(.+?\\)"
+#   negative_pattern: "\\b(btoa|atob|Buffer\\.from|Buffer\\.toString)\\s*\\([\"'][^\"']{1,30}[\"']\\)"
+#   context_lines: 2
+#   severity: "low"
 
-- rule_name: "document_location_modification"
-  description: "修改文档位置，可能导致重定向"
-  language: "javascript"
-  pattern: "\\b(location|window\\.location)\\s*=\\s*"
-  context_lines: 2
-  severity: "low"
-
-- rule_name: "suspicious_data_uri"
-  description: "使用Data URI可能隐藏恶意内容"
-  language: "javascript"
-  pattern: "data:[^,]+;base64,"
-  context_lines: 2
-  severity: "low"
 
 - rule_name: "python_file_write"
   description: "写入文件操作"
@@ -41,11 +28,7 @@
   pattern: "std::fs::(write|create|OpenOptions.*write)"
   severity: "low"
 
-- rule_name: "local_storage_access"
-  description: "访问本地存储"
-  language: "javascript"
-  pattern: "(localStorage|sessionStorage)\\.(getItem|setItem)"
-  severity: "low"
+
 
 - rule_name: "cookie_manipulation"
   description: "Cookie操作"

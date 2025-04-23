@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-扫描器模块实现，支持白名单和灰名单
+扫描器模块实现，支持白名单和灰名单，以及pnpm包管理器
 """
 
 import os
 import logging
-from typing import Dict, List, Tuple, Any, Optional
+from typing import Dict, List, Tuple, Any, Optional, Set
 
 logger = logging.getLogger('package-scanner.scanner')
 
@@ -85,22 +85,33 @@ class Scanner:
             return []
             
         for root, dirs, files in os.walk(self.target_path):
-            # 处理node_modules目录
-            if 'node_modules' in root:
-                # 检查当前目录是否在白名单或灰名单中
+            # 处理node_modules目录和node_modules/.pnpm目录
+            is_node_modules = 'node_modules' in root.split(os.sep)
+            is_pnpm = '.pnpm' in root.split(os.sep) and is_node_modules
+            
+            if is_node_modules:
+                # 获取包名，支持普通node_modules和pnpm结构
                 package_name = self._get_package_name(root)
                 
                 if package_name:
                     # 检查是否在白名单中(完全跳过)
                     if self.skip_whitelist and package_name in self.whitelist:
                         logger.debug(f"跳过白名单包: {package_name}")
-                        dirs[:] = []  # 清空dirs列表，不继续递归
+                        
+                        # 如果是直接的包目录，则跳过递归
+                        if (root.endswith(os.sep + package_name) or 
+                            root.endswith(os.sep + package_name.replace('/', os.sep))):
+                            dirs[:] = []  # 清空dirs列表，不继续递归
                         continue
                         
                     # 检查是否在灰名单中(完全跳过)
                     if self.skip_graylist and package_name in self.graylist:
                         logger.debug(f"跳过灰名单包: {package_name}")
-                        dirs[:] = []  # 清空dirs列表，不继续递归
+                        
+                        # 如果是直接的包目录，则跳过递归
+                        if (root.endswith(os.sep + package_name) or 
+                            root.endswith(os.sep + package_name.replace('/', os.sep))):
+                            dirs[:] = []  # 清空dirs列表，不继续递归
                         continue
                 
                 # 跳过dist目录等
@@ -159,7 +170,7 @@ class Scanner:
         
     def _get_package_name(self, path: str) -> Optional[str]:
         """
-        从路径中提取npm包名
+        从路径中提取npm包名，同时支持标准node_modules和pnpm结构
         
         Args:
             path: 文件或目录路径
@@ -170,22 +181,46 @@ class Scanner:
         if 'node_modules' not in path:
             return None
             
-        # 提取node_modules之后的部分
-        parts = path.split(os.path.sep + 'node_modules' + os.path.sep)
-        if len(parts) < 2:
-            return None
+        # 检查是否是pnpm结构
+        if '.pnpm' in path.split(os.sep):
+            # PNPM格式: node_modules/.pnpm/[package@version]/node_modules/[package]
+            # 或者: node_modules/.pnpm/[package@version]
+            parts = path.split(os.sep)
+            try:
+                pnpm_index = parts.index('.pnpm')
+                if pnpm_index + 1 < len(parts):
+                    # 获取@version前的包名部分
+                    package_part = parts[pnpm_index + 1].split('@')[0]
+                    
+                    # 处理@org/package格式
+                    if package_part == '':
+                        # 处理@org/package@version格式
+                        package_parts = parts[pnpm_index + 1].split('@')
+                        if len(package_parts) >= 3:
+                            package_part = '@' + package_parts[1]
+                    
+                    return package_part
+            except (ValueError, IndexError):
+                pass
+        else:
+            # 标准格式: node_modules/[package]
+            # 或者: node_modules/@org/[package]
+            parts = path.split(os.path.sep + 'node_modules' + os.path.sep)
+            if len(parts) < 2:
+                return None
+                
+            # 获取包路径的第一部分
+            package_path = parts[1].split(os.path.sep)[0]
             
-        # 获取包路径的第一部分
-        package_path = parts[1].split(os.path.sep)[0]
+            # 处理@org/package格式
+            if package_path.startswith('@'):
+                path_parts = parts[1].split(os.path.sep)
+                if len(path_parts) >= 2:
+                    package_path = path_parts[0] + '/' + path_parts[1]
+            
+            return package_path
         
-        # 处理@org/package格式
-        if package_path.startswith('@'):
-            path_parts = parts[1].split(os.path.sep)
-            if len(path_parts) >= 2:
-                package_path = '@' + path_parts[1]
-                package_path = path_parts[0] + '/' + path_parts[1]
-        
-        return package_path
+        return None
     
     def detect_package_manager(self) -> List[str]:
         """
@@ -199,6 +234,10 @@ class Scanner:
         # 检测 npm/yarn
         if os.path.exists(os.path.join(self.target_path, 'package.json')):
             package_managers.append('npm')
+            
+        # 检测 pnpm
+        if os.path.exists(os.path.join(self.target_path, 'pnpm-lock.yaml')):
+            package_managers.append('pnpm')
             
         # 检测 pip
         if os.path.exists(os.path.join(self.target_path, 'requirements.txt')) or \

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-更新后的规则引擎，支持更多功能
+更新后的规则引擎，支持更多功能，并优化了对混淆代码的检测
 """
 
 import os
@@ -9,7 +9,7 @@ import re
 import json
 import yaml
 import logging
-from typing import Dict, List, Any, Optional, Tuple, Pattern
+from typing import Dict, List, Any, Optional, Tuple, Pattern, Set
 
 logger = logging.getLogger('package-scanner.engine')
 
@@ -24,6 +24,8 @@ class RuleEngine:
         os.makedirs(self.rule_dir, exist_ok=True)
         # 缓存已编译的正则表达式
         self.regex_cache = {}
+        # 记录已处理的行范围，用于避免重复检测相同行上的混淆代码
+        self.processed_line_ranges = {}
         
     def _compile_regex(self, pattern: str) -> Pattern:
         """
@@ -276,7 +278,14 @@ class RuleEngine:
         file_pattern = rule.get('file_pattern')
         if file_pattern and not re.search(file_pattern, file_path):
             return []
+            
+        # 规则是否针对混淆代码
+        is_obfuscation_rule = 'obfuscated' in rule.get('rule_name', '').lower() or 'obfuscation' in rule.get('description', '').lower()
 
+        # 初始化文件的处理行范围
+        if file_path not in self.processed_line_ranges:
+            self.processed_line_ranges[file_path] = set()
+            
         # 编译正则表达式
         regex = self._compile_regex(pattern)
         
@@ -320,6 +329,15 @@ class RuleEngine:
             line_number = line_idx + 1
             column = start_pos - line_offsets[line_idx] + 1
             
+            # 对于混淆代码规则，如果当前行已经被处理过，跳过
+            if is_obfuscation_rule:
+                # 检查这个匹配位置是否在已处理的行范围内
+                if self._in_processed_range(file_path, line_number):
+                    continue
+                    
+                # 添加当前行到已处理的行范围
+                self._add_processed_range(file_path, line_number, line_offsets, start_pos)
+            
             # 获取上下文行
             context = self._get_context_lines(file_content, line_offsets, line_idx, context_lines)
             
@@ -334,6 +352,63 @@ class RuleEngine:
             })
                 
         return matches
+    
+    def _in_processed_range(self, file_path: str, line_number: int) -> bool:
+        """
+        检查行号是否在已处理的范围内
+        
+        Args:
+            file_path: 文件路径
+            line_number: 行号
+            
+        Returns:
+            是否在已处理范围内
+        """
+        return line_number in self.processed_line_ranges.get(file_path, set())
+    
+    def _add_processed_range(self, file_path: str, line_number: int, line_offsets: List[int], match_pos: int) -> None:
+        """
+        添加已处理的行范围
+        
+        Args:
+            file_path: 文件路径
+            line_number: 匹配的行号
+            line_offsets: 行偏移量列表
+            match_pos: 匹配位置
+        """
+        if file_path not in self.processed_line_ranges:
+            self.processed_line_ranges[file_path] = set()
+            
+        # 添加当前行
+        self.processed_line_ranges[file_path].add(line_number)
+        
+        # 尝试获取长行的内容以决定是否需要跳过更多行
+        if line_number - 1 < len(line_offsets) - 1:  # 确保不是最后一行
+            current_line_start = line_offsets[line_number - 1]
+            next_line_start = line_offsets[line_number] if line_number < len(line_offsets) else -1
+            
+            # 如果有下一行且当前行特别长(例如超过300个字符)
+            if next_line_start != -1 and next_line_start - current_line_start > 300:
+                # 找到与当前行相同缩进级别的下一行
+                next_non_continuation_line = self._find_next_non_continuation_line(line_number, line_offsets)
+                
+                # 将所有连续的行添加到已处理范围
+                for l in range(line_number, next_non_continuation_line + 1):
+                    self.processed_line_ranges[file_path].add(l)
+    
+    def _find_next_non_continuation_line(self, current_line: int, line_offsets: List[int]) -> int:
+        """
+        找到不是当前行延续的下一行
+        
+        Args:
+            current_line: 当前行号
+            line_offsets: 行偏移量列表
+            
+        Returns:
+            下一个非延续行的行号
+        """
+        # 简单实现：对于混淆代码，通常是一个很长的行，我们可以返回当前行+10作为保守估计
+        return min(current_line + 10, len(line_offsets))
         
     def _get_context_lines(self, content: str, line_offsets: List[int], line_idx: int, context_lines: int) -> Dict:
         """

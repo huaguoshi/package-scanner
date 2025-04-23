@@ -1,0 +1,5 @@
+// 典型的函数解混淆模式
+function _0x3b2d(_0x14a3, _0x2a90cb) {
+    return _0x12a3[_0x14a3 - _0x2a90cb];
+}
+const secret = _0x3b2d(2, 1);

@@ -2,3 +2,7 @@
 node_parser/node_modules/
 report/
 scanner/__pycache__/
+engine/__pycache__/__init__.cpython-313.pyc
+engine/__pycache__/rule_engine.cpython-313.pyc
+reporter/__pycache__/__init__.cpython-313.pyc
+reporter/__pycache__/reporter.cpython-313.pyc

