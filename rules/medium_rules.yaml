@@ -74,6 +74,12 @@
   pattern: "Command::new\\s*\\("
   severity: "medium"
 
+- rule_name: "rust_env_sensitive_access"
+  description: "读取敏感环境变量"
+  language: "rust"
+  pattern: "env::var\\s*\\(\\s*[\"'](API_KEY|SECRET|PASSWORD|TOKEN)[\"']"
+  severity: "medium"
+
 # - rule_name: "json_parse_eval"
 #   description: "使用JSON.parse处理可能的恶意数据"
 #   language: "javascript"
@@ -95,3 +101,30 @@
   pattern: "(fetch|axios|request)\\s*\\(.*?(https?:\\/\\/|api_key|token|password|secret)"
   negative_pattern: "(\\/\\/|\\/\\*|\\*|\\.com|\\.org|\\.net|@see|test|example)"
   severity: "medium"
+
+- rule_name: "go_weak_crypto"
+  description: "使用了弱加密算法"
+  language: "go"
+  pattern: "crypto/md5|crypto/sha1|crypto/des"
+  severity: "medium"
+
+- rule_name: "go_regex_dos"
+  description: "正则表达式未校验外部输入，可能导致 ReDoS 攻击"
+  language: "go"
+  pattern: "regexp\\.(MustCompile|Compile)\\s*\\(\\s*[^)]*(user|input|param|req|query|header)[^)]*\\)"
+  severity: "medium"
+
+
+- rule_name: "go_zip_slip"
+  description: "解压文件时未验证路径，可能导致目录遍历攻击"
+  language: "go"
+  pattern: "archive/zip\\.NewReader|archive/tar\\.NewReader"
+  negative_pattern: "filepath\\.Clean|filepath\\.Abs|strings\\.HasPrefix|strings\\.Contains"
+  severity: "medium"
+  context_lines: 4
+
+- rule_name: "go_unescaped_template_data"
+  description: "模板中的数据未转义，可能导致XSS攻击"
+  language: "go"
+  pattern: "template\\.(HTML|URL|JS|JSStr)\\([^)]*\\)"
+  severity: "medium"  

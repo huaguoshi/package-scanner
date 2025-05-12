@@ -41,6 +41,8 @@ from reporter import Reporter
 # 默认文件路径
 DEFAULT_WHITELIST_FILE = os.path.join('package_lists', 'whitelist.ini')
 DEFAULT_GRAYLIST_FILE = os.path.join('package_lists', 'graylist.ini')
+DEFAULT_RUST_WHITELIST_FILE = os.path.join('package_lists', 'rust_whitelist.ini')
+DEFAULT_GO_WHITELIST_FILE = os.path.join('package_lists', 'go_whitelist.ini')
 
 def analyze_javascript_code(file_path: str, engine: RuleEngine) -> List[Dict]:
     """
@@ -173,10 +175,18 @@ def main():
                        help=f'白名单npm包列表文件路径 (默认: {DEFAULT_WHITELIST_FILE})')
     parser.add_argument('--graylist-file', default=DEFAULT_GRAYLIST_FILE, 
                        help=f'灰名单npm包列表文件路径 (默认: {DEFAULT_GRAYLIST_FILE})')
+    parser.add_argument('--rust-whitelist-file', default=DEFAULT_RUST_WHITELIST_FILE,
+                       help=f'Rust白名单包列表文件路径 (默认: {DEFAULT_RUST_WHITELIST_FILE})')
     parser.add_argument('--no-whitelist', action='store_false', dest='skip_whitelist',
                        help='不跳过白名单中的包(默认跳过)')
     parser.add_argument('--no-graylist', action='store_false', dest='skip_graylist',
                        help='不跳过灰名单中的包(默认跳过)')
+    parser.add_argument('--no-rust-whitelist', action='store_false', dest='skip_rust_whitelist',
+                       help='不跳过Rust白名单中的包(默认跳过)')
+    parser.add_argument('--go-whitelist-file', default=DEFAULT_GO_WHITELIST_FILE, 
+                    help=f'Go白名单包列表文件路径 (默认: {DEFAULT_GO_WHITELIST_FILE})')
+    parser.add_argument('--no-go-whitelist', action='store_false', dest='skip_go_whitelist',
+                    help='不跳过Go白名单中的包(默认跳过)')
     
     args = parser.parse_args()
     
@@ -195,6 +205,7 @@ def main():
     report_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'report')
     os.makedirs(report_dir, exist_ok=True)
     
+
     # 标准扫描流程
     # 步骤1: 扫描目录
     scanner = Scanner(
@@ -203,8 +214,12 @@ def main():
         skip_dist=args.skip_dist,
         whitelist_file=args.whitelist_file, 
         graylist_file=args.graylist_file,
+        rust_whitelist_file=args.rust_whitelist_file,
+        go_whitelist_file=args.go_whitelist_file,  
         skip_whitelist=args.skip_whitelist, 
-        skip_graylist=args.skip_graylist
+        skip_graylist=args.skip_graylist,
+        skip_rust_whitelist=args.skip_rust_whitelist,
+        skip_go_whitelist=args.skip_go_whitelist  
     )
     files = scanner.scan()
     package_managers = scanner.detect_package_manager() or []

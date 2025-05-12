@@ -298,20 +298,21 @@ class RuleEngine:
         # 获取规则的最小出现次数
         min_occurrences = rule.get('min_occurrences', 1)
         
-        # 查找所有匹配
-        all_matches = list(regex.finditer(file_content))
-        
-        # 如果匹配数小于最小出现次数，则返回空
-        if len(all_matches) < min_occurrences:
-            return []
-            
         # 计算文件的行偏移量，用于定位行号
         line_offsets = [0]
         for i, char in enumerate(file_content):
             if char == '\n':
                 line_offsets.append(i + 1)
                 
-        # 处理每个匹配
+        # 查找所有匹配
+        all_matches = list(regex.finditer(file_content))
+        
+        # 如果匹配数小于最小出现次数，则返回空
+        if len(all_matches) < min_occurrences:
+            return []
+
+        # 添加一个功能：忽略注释中的代码匹配
+        filtered_matches = []
         for match in all_matches:
             # 如果有负向模式，则检查匹配是否符合负向模式
             if negative_regex and negative_regex.match(match.group(0)):
@@ -329,6 +330,10 @@ class RuleEngine:
             line_number = line_idx + 1
             column = start_pos - line_offsets[line_idx] + 1
             
+            # 跳过注释中的匹配
+            if self._is_comment_match(file_content, line_idx, line_offsets, start_pos, file_path):
+                continue
+                
             # 对于混淆代码规则，如果当前行已经被处理过，跳过
             if is_obfuscation_rule:
                 # 检查这个匹配位置是否在已处理的行范围内
@@ -342,7 +347,7 @@ class RuleEngine:
             context = self._get_context_lines(file_content, line_offsets, line_idx, context_lines)
             
             # 添加匹配结果
-            matches.append({
+            filtered_matches.append({
                 'rule': rule.get('rule_name'),
                 'description': rule.get('description'),
                 'severity': rule.get('severity', 'medium'),
@@ -351,7 +356,74 @@ class RuleEngine:
                 'context': context
             })
                 
-        return matches
+        return filtered_matches
+        
+    def _is_comment_match(self, content: str, line_idx: int, line_offsets: List[int], pos: int, file_path: str) -> bool:
+        """
+        检查匹配是否在注释中
+        
+        Args:
+            content: 文件内容
+            line_idx: 行索引
+            line_offsets: 行偏移量
+            pos: 匹配位置
+            file_path: 文件路径
+            
+        Returns:
+            是否在注释中
+        """
+        # 获取文件扩展名
+        ext = os.path.splitext(file_path)[1].lower()
+        
+        # 获取当前行
+        if line_idx >= len(line_offsets) - 1:
+            line = content[line_offsets[line_idx]:]
+        else:
+            line = content[line_offsets[line_idx]:line_offsets[line_idx+1]]
+            
+        # 当前行中的位置
+        line_pos = pos - line_offsets[line_idx]
+        
+        # 根据文件类型进行判断
+        if ext in ('.js', '.ts', '.jsx', '.tsx'):
+            # 检查单行注释
+            comment_pos = line[:line_pos].rfind('//')
+            if comment_pos != -1:
+                return True
+                
+            # 检查多行注释
+            start_comment = content[:pos].rfind('/*')
+            end_comment = content[:pos].rfind('*/')
+            if start_comment != -1 and (end_comment == -1 or start_comment > end_comment):
+                return True
+        
+        elif ext in ('.py'):
+            # 检查Python注释
+            comment_pos = line[:line_pos].rfind('#')
+            if comment_pos != -1:
+                return True
+        
+        elif ext in ('.go', '.rs'):
+            # 检查单行注释
+            comment_pos = line[:line_pos].rfind('//')
+            if comment_pos != -1:
+                return True
+                
+            # 检查多行注释
+            if ext == '.rs':
+                # Rust支持文档注释
+                doc_comment_pos = line[:line_pos].rfind('//!')
+                if doc_comment_pos != -1:
+                    return True
+                    
+            # 检查多行注释
+            start_comment = content[:pos].rfind('/*')
+            end_comment = content[:pos].rfind('*/')
+            if start_comment != -1 and (end_comment == -1 or start_comment > end_comment):
+                return True
+        
+        return False
+
     
     def _in_processed_range(self, file_path: str, line_number: int) -> bool:
         """

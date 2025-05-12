@@ -98,3 +98,36 @@
     - "_0x[a-f0-9]{3,}"                                   # 混淆变量名特征
   not_pattern: "typeof exports.*module\\.exports|define\\.amd"  # 排除 UMD 模块封装
   severity: "high"
+
+
+- rule_name: "go_insecure_tls"
+  description: "TLS验证被禁用，存在中间人攻击风险"
+  language: "go"
+  pattern: "(&?tls\\.Config\\{[^}]*InsecureSkipVerify:\\s*true|InsecureSkipVerify\\s*:\\s*true)"
+  severity: "high"
+
+- rule_name: "go_command_injection"
+  description: "检测到外部输入拼接到命令行中，可能导致命令注入"
+  language: "go"
+  pattern: "(exec\\.Command|exec\\.CommandContext)\\s*\\([^)]*\\+[^)]*\\)"
+  severity: "high"
+  context_lines: 3
+
+- rule_name: "go_hardcoded_secret"
+  description: "代码中硬编码了私钥或密码"
+  language: "go"
+  pattern: "\\b(private[_-]?key|api[_-]?key|token|password|secret|auth|credential)\\b\\s*(:=|=)\\s*\\\"[a-zA-Z0-9+/=._-]{16,}\\\""
+  negative_pattern: "\\b(private[_-]?key|api[_-]?key|token|password|secret)\\b\\s*(:=|=)\\s*\\\"(example|test|dummy|placeholder|your_)\""
+  severity: "high"
+
+- rule_name: "go_sql_injection"
+  description: "可能存在SQL注入的动态查询"
+  language: "go"
+  pattern: "(?i)(db|sql)\\.(Query|Exec|QueryRow|ExecContext|QueryContext|QueryRowContext)\\s*\\([^)]*\\+[^)]*\\)"
+  negative_pattern: "(?i)(db|sql)\\.(Query|Exec|QueryRow)\\s*\\(\\s*\"[^\"]*\"\\s*,\\s*"
+  severity: "high"
+  
+
+
+
+  
